@@ -42,9 +42,9 @@ def Play():
     TD=10
     SCORE=0
     def sound1():
-        playsound("sounds\gamesound.mp3")
+        playsound("gamesound.mp3")
     def sound2():
-        playsound("sounds\gamesound2.mp3")
+        playsound("gamesound2.mp3")
     def TIME():
         global wordlist
         global wordpos
