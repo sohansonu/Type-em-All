@@ -2,6 +2,7 @@ import pygame
 import time
 import threading
 import random
+from playsound import playsound
 pygame.init()
 
 win=pygame.display.set_mode((1200,700))
@@ -38,7 +39,12 @@ def gameText(st,x,y,bg=(0,0,0)):
 def Play():
     ##TIMER
     global SCORE
+    TD=10
     SCORE=0
+    def sound1():
+        playsound("sounds\gamesound.mp3")
+    def sound2():
+        playsound("sounds\gamesound2.mp3")
     def TIME():
         global wordlist
         global wordpos
@@ -46,6 +52,7 @@ def Play():
         global timelevel
         global Ylist
         global TD
+        global speed 
         TD=10
         timelevel=5
         timer=0
@@ -54,22 +61,44 @@ def Play():
         while(1):
             time.sleep(timelevel)
             timer+=timelevel
-            if timer>20:
-                timelevel=4
-            elif timer>40:
-                timelevel=3
-                TD=8
+            if timer>200:
+                speed=15
+            elif timer>190:
+                speed=14
+            elif timer>180:
+                speed=12
+            elif timer>170:
+                speed=10
+            elif timer>160:
+                speed=8
+            elif timer>150:
+                timelevel=1
+                TD=1
+                speed=6
             elif timer>80:
                 timelevel=2
+                TD=2
+                speed=4
+            elif timer>40:
+                timelevel=3
                 TD=5
-            elif timer>150:
-                timelevel=2
-                TD=3
+                speed=3
+            elif timer>20:
+                timelevel=4
+                TD=7
+                speed=2
+            
             try:
+                
                 file=open('words.txt','r')
                 rand=random.randrange(1000)
                 x=0
+                try:
+                    Ylist.remove(y)
+                except:
+                    Ylist=[50,100,150,200,250,300,350,400,450,500,550,600]
                 y=random.choice(Ylist)
+                Ylist=[50,100,150,200,250,300,350,400,450,500,550,600]
                 for i, line in enumerate(file):
                     if i==rand:
                         wordlist[line[:-1]]=[x,y]
@@ -79,9 +108,13 @@ def Play():
 
                     
     Tthread=threading.Thread(target=TIME)
+    Sthread2=threading.Thread(target=sound2)
     Tthread.start()
+    Sthread2.start()
     ##
+    
     win.fill((0,0,0))
+    speed=1
     Etext=''
     running=True
     while running:
@@ -89,6 +122,129 @@ def Play():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running=False
+            if event.type == pygame.KEYDOWN:
+                
+        
+                if event.key == pygame.K_q:
+                    Etext=Etext+'q'
+                    
+                                
+                elif event.key == pygame.K_w:
+                    Etext=Etext+'w'
+                    
+                                
+                elif event.key == pygame.K_e:
+                    Etext=Etext+'e'
+                    
+                                
+                elif event.key == pygame.K_r:
+                    Etext=Etext+'r'
+                    
+                                
+                elif event.key == pygame.K_t:
+                    Etext=Etext+'t'
+                    
+                                
+                elif event.key == pygame.K_y:
+                    Etext=Etext+'y'
+                    
+                                
+                elif event.key == pygame.K_u:
+                    Etext=Etext+'u'
+                    
+                                
+                elif event.key == pygame.K_i:
+                    Etext=Etext+'i'
+                    
+                                
+                elif event.key == pygame.K_o:
+                    Etext=Etext+'o'
+                    
+                                
+                elif event.key == pygame.K_p:
+                    Etext=Etext+'p'
+                    
+                                
+                elif event.key == pygame.K_a:
+                    Etext=Etext+'a'
+                    
+                                
+                elif event.key == pygame.K_s:
+                    Etext=Etext+'s'
+                    
+                                
+                elif event.key == pygame.K_d:
+                    Etext=Etext+'d'
+                    
+                                
+                elif event.key == pygame.K_f:
+                    Etext=Etext+'f'
+                    
+                               
+                elif event.key == pygame.K_g:
+                    Etext=Etext+'g'
+                    
+                                
+                elif event.key == pygame.K_h:
+                    Etext=Etext+'h'
+                    
+                                
+                elif event.key == pygame.K_j:
+                    Etext=Etext+'j'
+                    
+                                
+                elif event.key == pygame.K_k:
+                    Etext=Etext+'k'
+                    
+                                
+                elif event.key == pygame.K_l:
+                    Etext=Etext+'l'
+                    
+                               
+                elif event.key == pygame.K_z:
+                    Etext=Etext+'z'
+                    
+                                
+                elif event.key == pygame.K_x:
+                    Etext=Etext+'x'
+                    
+                                
+                elif event.key == pygame.K_c:
+                    Etext=Etext+'c'
+                    
+                                
+                elif event.key == pygame.K_v:
+                    Etext=Etext+'v'
+                    
+                                
+                elif event.key == pygame.K_b:
+                    Etext=Etext+'b'
+                    
+                                
+                elif event.key == pygame.K_n:
+                    Etext=Etext+'n'
+                    
+                                
+                elif event.key == pygame.K_m:
+                    Etext=Etext+'m'
+                    
+
+                elif event.key == pygame.K_BACKSPACE:
+                    Etext=Etext[:-1]
+                    
+
+                elif event.key == pygame.K_RETURN:
+                    if Etext!="":
+                        try:
+                            del wordlist[Etext]
+                            SCORE+=5
+                            Etext=''
+                            Sthread=threading.Thread(target=sound1)
+                            Sthread.start()
+                            
+                        except:
+                            continue
+                     
 
         win.fill((0,0,0))
         try:  
@@ -97,132 +253,14 @@ def Play():
                 if x>1200:
                     return SCORE
                 gameText(i,x,y)
-                wordlist[i][0]+=1
+                wordlist[i][0]+=speed
                 
         except:
             continue
 
        
             
-        keys=pygame.key.get_pressed()
-        
-        if keys[pygame.K_q]:
-            Etext=Etext+'q'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_w]:
-            Etext=Etext+'w'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_e]:
-            Etext=Etext+'e'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_r]:
-            Etext=Etext+'r'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_t]:
-            Etext=Etext+'t'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_y]:
-            Etext=Etext+'y'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_u]:
-            Etext=Etext+'u'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_i]:
-            Etext=Etext+'i'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_o]:
-            Etext=Etext+'o'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_p]:
-            Etext=Etext+'p'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_a]:
-            Etext=Etext+'a'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_s]:
-            Etext=Etext+'s'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_d]:
-            Etext=Etext+'d'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_f]:
-            Etext=Etext+'f'
-            time.sleep(0.13)
-                       
-        elif keys[pygame.K_g]:
-            Etext=Etext+'g'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_h]:
-            Etext=Etext+'h'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_j]:
-            Etext=Etext+'j'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_k]:
-            Etext=Etext+'k'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_l]:
-            Etext=Etext+'l'
-            time.sleep(0.13)
-                       
-        elif keys[pygame.K_z]:
-            Etext=Etext+'z'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_x]:
-            Etext=Etext+'x'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_c]:
-            Etext=Etext+'c'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_v]:
-            Etext=Etext+'v'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_b]:
-            Etext=Etext+'b'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_n]:
-            Etext=Etext+'n'
-            time.sleep(0.13)
-                        
-        elif keys[pygame.K_m]:
-            Etext=Etext+'m'
-            time.sleep(0.13)
-
-        elif keys[pygame.K_BACKSPACE]:
-            Etext=Etext[:-1]
-            time.sleep(0.13)
-
-        elif keys[pygame.K_RETURN]:
-            if Etext!="":
-                try:
-                    del wordlist[Etext]
-                    SCORE+=5
-                    Etext=''
-                except:
-                    continue
-            time.sleep(0.13)            
+                   
         Text(Etext,600,650,size=18,color=(255,255,0))
         Text(str(SCORE),1100,30,size=18)
         pygame.display.update()
@@ -284,16 +322,3 @@ def MENU():
     pygame.quit()            
             
 MENU()    
-    
-
-
-
-
-
-
-
-
-
-
-
-            
